@@ -60,5 +60,34 @@
 </div>
 
 <script src="script.js"></script>
+  <script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } 
+from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  appId: "YOUR_APP_ID"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+// 🚫 BLOCK ACCESS IF NOT LOGGED IN
+onAuthStateChanged(auth, (user) => {
+  if (!user) {
+    window.location.href = "index.html";
+  }
+});
+
+// logout function (optional but useful)
+window.logout = async function () {
+  await signOut(auth);
+  window.location.href = "index.html";
+};
+</script>
+  <button onclick="logout()">Logout</button>
 </body>
 </html>
