@@ -1,36 +1,102 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>My Web Diary Login</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Web Diary | Login</title>
+  <style>
+    :root {
+      --primary: #6366f1;
+      --glass: rgba(255, 255, 255, 0.15);
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
+
+    .login-card {
+      background: var(--glass);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 2.5rem;
+      border-radius: 20px;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      width: 100%;
+      max-width: 380px;
+      text-align: center;
+    }
+
+    h2 { margin-bottom: 1.5rem; font-weight: 300; letter-spacing: 1px; }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      box-sizing: border-box;
+      outline: none;
+      transition: 0.3s;
+    }
+
+    input::placeholder { color: rgba(255, 255, 255, 0.6); }
+    input:focus { background: rgba(255, 255, 255, 0.2); box-shadow: 0 0 8px var(--primary); }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 1.5rem;
+      border: none;
+      border-radius: 8px;
+      background: var(--primary);
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.3s;
+    }
+
+    button:hover { background: #4f46e5; transform: translateY(-2px); }
+    button:active { transform: translateY(0); }
+
+    #msg { margin-top: 1rem; font-size: 0.9rem; min-height: 1.2em; color: #ffdada; }
+  </style>
 </head>
 
 <body>
-  <h2>Login to My Diary</h2>
+  <div class="login-card">
+    <h2>My Web Diary</h2>
 
-  <input id="email" placeholder="Email@diary.com" />
-  <br><br>
+    <input id="email" type="email" placeholder="Email@diary.com" required />
+    <input id="password" type="password" placeholder="Password" required />
 
-  <input id="password" type="password" placeholder="Password" />
-  <br><br>
+    <button onclick="login()">Sign In</button>
 
-  <button onclick="login()">Login</button>
-
-  <p id="msg"></p>
+    <p id="msg"></p>
+  </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword } 
-    from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCHHuxG8iaUK4rHvUNDj_uazPaRWF9DuMc",
-    authDomain: "my-web-diary-d9280.firebaseapp.com",
-    projectId: "my-web-diary-d9280",
-    storageBucket: "my-web-diary-d9280.firebasestorage.app",
-    messagingSenderId: "252077344584",
-    appId: "1:252077344584:web:d80e4feafc200a513d157d",
-    measurementId: "G-B0Y65EVSR4"
-  };
+      authDomain: "my-web-diary-d9280.firebaseapp.com",
+      projectId: "my-web-diary-d9280",
+      storageBucket: "my-web-diary-d9280.firebasestorage.app",
+      messagingSenderId: "252077344584",
+      appId: "1:252077344584:web:d80e4feafc200a513d157d",
+      measurementId: "G-B0Y65EVSR4"
+    };
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
@@ -38,16 +104,18 @@
     window.login = async function () {
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
+      const msg = document.getElementById("msg");
 
+      msg.innerText = "Authenticating...";
+      
       try {
         await signInWithEmailAndPassword(auth, email, password);
-        document.getElementById("msg").innerText = "Login successful!";
-        
-        // redirect to your diary page
-        window.location.href = "diary.html";
-
+        msg.style.color = "#c7ffd8";
+        msg.innerText = "Success! Opening your diary...";
+        setTimeout(() => { window.location.href = "diary.html"; }, 1000);
       } catch (error) {
-        document.getElementById("msg").innerText = "Login failed: " + error.message;
+        msg.style.color = "#ffdada";
+        msg.innerText = "Login failed: " + error.code.split('/')[1].replace(/-/g, ' ');
       }
     };
   </script>
