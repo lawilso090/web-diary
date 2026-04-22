@@ -2,7 +2,7 @@ body {
   margin: 0;
   background: black;
   color: white;
-  overflow: hidden;
+  overflow-y: auto;
 
   /* 💥 THIS MAKES YOUR DOT THE ONLY CURSOR */
   cursor: none;
